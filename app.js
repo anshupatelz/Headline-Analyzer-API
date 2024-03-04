@@ -5,6 +5,11 @@ const natural = require('natural');
 const path = require('path');
 const port = 8080;
 
+const commonWordsList = require('./utils/common-words-list');
+const uncommonWordsList = require('./utils/uncommon-words-list');
+const emotionalWordsList = require('./utils/emotional-words-list');
+const powerWordsList = require('./utils/power-words-list');
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
@@ -40,6 +45,12 @@ app.get('/', (req, res) => {
         headlineType.push('General');
     }
 
+    // Word Balance
+    const commonWords = tokens.filter(word => commonWordsList.includes(word));
+    const uncommonWords = tokens.filter(word => uncommonWordsList.includes(word));
+    const emotionalWords = tokens.filter(word => emotionalWordsList.includes(word));
+    const powerWords = tokens.filter(word => powerWordsList.includes(word));
+
 
     // Response
     const analysis = {
@@ -52,6 +63,14 @@ app.get('/', (req, res) => {
             beginning_words: tokens.slice(0, 3),
             ending_words: tokens.slice(-3)
         },
+        semantic_analysis: {
+            word_balance: {
+                common_words: commonWords,
+                uncommon_words: uncommonWords,
+                emotional_words: emotionalWords,
+                power_words: powerWords
+            },
+        }
     };
     res.json(analysis);
 });

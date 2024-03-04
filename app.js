@@ -5,7 +5,6 @@ const Sentiment = require('sentiment');
 const getSentiment = new Sentiment();
 const getReadability = require("flesch-kincaid-calc");
 
-const path = require('path');
 const port = 8080;
 
 const commonWordsList = require('./utils/common-words-list');
@@ -25,9 +24,9 @@ app.get('/', (req, res) => {
     let tokenizer = new natural.WordTokenizer();
     const tokens = tokenizer.tokenize(headline);
 
-    // Headline Types
+    // Headline Types - START
 
-    // ----- Define headline types and their conditions
+    // Define headline types and their conditions
     const headlineTypes = [
         { type: 'How-to', condition: tokens => (tokens[0] == 'how-to') || (tokens[0] == 'how' && tokens[1] == 'to') },
         { type: 'List', condition: tokens => !isNaN(tokens[0]) || ((tokens[0] == 'best') && !isNaN(tokens[1])) || ((tokens[0] == 'top') && !isNaN(tokens[1])) },
@@ -37,7 +36,7 @@ app.get('/', (req, res) => {
         { type: 'Interview', condition: tokens => tokens.includes('interview') }
     ];
 
-    // ---- Headline Type Identification
+    // Headline Type Identification
     let headlineType = [];
     for (let i = 0; i < headlineTypes.length; i++) {
         if (headlineTypes[i].condition(tokens, headline)) {
@@ -48,14 +47,9 @@ app.get('/', (req, res) => {
         headlineType.push('General');
     }
 
-    // Word Balance
-    const commonWords = tokens.filter(word => commonWordsList.includes(word));
-    const uncommonWords = tokens.filter(word => uncommonWordsList.includes(word));
-    const emotionalWords = tokens.filter(word => emotionalWordsList.includes(word));
-    const powerWords = tokens.filter(word => powerWordsList.includes(word));
+    // Headline Types - END
 
-
-    // Response
+    // Response Object
     const analysis = {
         headline: headline,
         tokens: tokens,
@@ -68,10 +62,10 @@ app.get('/', (req, res) => {
         },
         semantic_analysis: {
             word_balance: {
-                common_words: commonWords,
-                uncommon_words: uncommonWords,
-                emotional_words: emotionalWords,
-                power_words: powerWords
+                common_words: tokens.filter(word => commonWordsList.includes(word)),
+                uncommon_words: tokens.filter(word => uncommonWordsList.includes(word)),
+                emotional_words: tokens.filter(word => emotionalWordsList.includes(word)),
+                power_words: tokens.filter(word => powerWordsList.includes(word))
             },
         },
         sentiment_analysis: {
@@ -81,7 +75,7 @@ app.get('/', (req, res) => {
         },
         readability_analysis: {
             flesch_kincaid_grade: getReadability.getGradeLevel(headline), // 0-12
-            flesch_reading_ease: getReadability.getReadingEase(headline), // 0-100,
+            flesch_reading_ease: getReadability.getReadingEase(headline), // 0-100
         }
     };
     res.json(analysis);

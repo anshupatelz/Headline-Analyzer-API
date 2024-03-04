@@ -1,0 +1,34 @@
+{
+  "name": "headline-analyzer-api",
+  "version": "1.0.0",
+  "description": "A API that help you to write Impactful and SEO Optimized Blog Headlines.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anshupatelz/Headline-Analyzer-API.git"
+  },
+  "keywords": [
+    "Headline",
+    "Analyzer",
+    "SEO",
+    "Blogging",
+    "Readability",
+    "Title",
+    "Score",
+    "Headline",
+    "Score"
+  ],
+  "author": "Anshu Patel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anshupatelz/Headline-Analyzer-API/issues"
+  },
+  "homepage": "https://github.com/anshupatelz/Headline-Analyzer-API#readme",
+  "dependencies": {
+    "express": "^4.18.3",
+    "nodemon": "^3.1.0"
+  }
+}

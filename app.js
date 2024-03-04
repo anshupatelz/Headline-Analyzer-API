@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const natural = require('natural');
+const Sentiment = require('sentiment');
+const getSentiment = new Sentiment();
+const getReadability = require("flesch-kincaid-calc");
 
 const path = require('path');
 const port = 8080;
@@ -70,6 +73,15 @@ app.get('/', (req, res) => {
                 emotional_words: emotionalWords,
                 power_words: powerWords
             },
+        },
+        sentiment_analysis: {
+            score: getSentiment.analyze(headline).score,
+            positive_words: getSentiment.analyze(headline).positive,
+            negative_words: getSentiment.analyze(headline).negative
+        },
+        readability_analysis: {
+            flesch_kincaid_grade: getReadability.getGradeLevel(headline), // 0-12
+            flesch_reading_ease: getReadability.getReadingEase(headline), // 0-100,
         }
     };
     res.json(analysis);

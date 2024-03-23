@@ -1,4 +1,5 @@
 require('dotenv').config()
+const cors = require('cors');
 const express = require('express');
 const app = express();
 const natural = require('natural');
@@ -6,6 +7,8 @@ const Sentiment = require('sentiment');
 const getSentiment = new Sentiment();
 const getReadability = require("flesch-kincaid-calc");
 
+//Middlewares
+app.use(cors());
 
 const commonWordsList = require('./utils/common-words-list');
 const uncommonWordsList = require('./utils/uncommon-words-list');

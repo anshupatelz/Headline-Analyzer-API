@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/anshupatelz/Headline-Analyzer-API#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "flesch-kincaid-calc": "^1.0.1",

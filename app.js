@@ -102,15 +102,15 @@ app.get('/', (req, res) => {
             };
 
             // Calculate the score for each factor
-            const headlineLengthScore = Math.min(100, (structuralAnalysis.character_count / 60) * 100); // Assuming 60 is the optimal length
-            const numberInTitleScore = headline.match(/\d+/) ? 100 : 0;
-            const commonWordsScore = Math.min(100, (wordBalance.common_words.length / structuralAnalysis.word_count) * 100);
-            const uncommonWordsScore = Math.min(100, (wordBalance.uncommon_words.length / structuralAnalysis.word_count) * 100);
-            const emotionalWordsScore = Math.min(100, (wordBalance.emotional_words.length / structuralAnalysis.word_count) * 100);
-            const powerWordsScore = wordBalance.power_words.length > 0 ? 100 : 0;
-            const sentimentScore = sentimentAnalysis.score;
-            const fleschKincaidGradeScore = (9 - readabilityAnalysis.flesch_kincaid_grade) / 9 * 100; // Assuming 9 is the optimal grade level
-            const fleschReadingEaseScore = Math.min(100, (readabilityAnalysis.flesch_reading_ease - 60) / 10 * 100); // Assuming 60-70 is the optimal range
+            const headlineLengthScore = 100 - Math.abs(structuralAnalysis.character_count - 60) * (100 / 60); // Assuming 60 is the optimal length
+            const numberInTitleScore = headline.match(/\d+/) ? 100 : 0; // 0 or 100
+            const commonWordsScore = 100 - Math.abs((wordBalance.common_words.length / structuralAnalysis.word_count) * 100 - 25) * (100 / 25); // Assuming 25% is the optimal number
+            const uncommonWordsScore = 100 - Math.abs((wordBalance.uncommon_words.length / structuralAnalysis.word_count) * 100 - 15) * (100 / 15); // Assuming 15% is the optimal number
+            const emotionalWordsScore = 100 - Math.abs((wordBalance.emotional_words.length / structuralAnalysis.word_count) * 100 - 15) * (100 / 15); // Assuming 15% is the optimal number
+            const powerWordsScore = 100 - Math.abs(wordBalance.power_words.length - 3) * (100 / 3); // Assuming 3 is the optimal number
+            const sentimentScore = (sentimentAnalysis.score == 0 ? 50 : (sentimentAnalysis.score > 0 ? 100 : 0)); // Assuming 0 is the neutral score
+            const fleschKincaidGradeScore = (readabilityAnalysis.flesch_kincaid_grade < 9 ? 100 : 100 - Math.abs(readabilityAnalysis.flesch_kincaid_grade - 9) * (100 / 9)); // Assuming 9 is the optimal grade level
+            const fleschReadingEaseScore = readabilityAnalysis.flesch_reading_ease; // Assuming 100 is the optimal range
 
             // Calculate the final score
             const score = (
